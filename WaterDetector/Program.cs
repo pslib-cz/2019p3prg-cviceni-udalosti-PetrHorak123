@@ -8,12 +8,19 @@ namespace WaterDetector
     {
         static void Main(string[] args)
         {
+            EvenSubscriber sub = new EvenSubscriber();
             Random r = new Random();
             WaterTank wt1 = new WaterTank(100, "WT1");
             WaterTank wt2 = new WaterTank(10, "WT2");
             WaterTank wt3 = new WaterTank(500, "WT3");
             WaterTank wt4 = new WaterTank(50, "WT4");
             WaterTank wt5 = new WaterTank(25, "WT5");
+
+            
+            wt1.ValueHasChanged += ReportChange;
+            wt1.ValueHasChanged += sub.OnValueChanged;
+
+
             while (true)
             {
                 wt1.Add(r.Next(5));
@@ -23,6 +30,11 @@ namespace WaterDetector
                 wt5.Add(r.Next(5));
                 Thread.Sleep(1000);
             }
+        }
+
+        static void ReportChange(object sender, ExampleEventArgs e)
+        {
+            Console.WriteLine("Value was changed to " + e.Value);
         }
     }
 }

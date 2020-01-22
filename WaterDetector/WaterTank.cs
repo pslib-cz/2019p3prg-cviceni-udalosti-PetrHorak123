@@ -18,15 +18,49 @@ namespace WaterDetector
 
         public int Capacity { get; }
         public string Name { get; }
-        public int CurrentValue { get { return _value; } }
+        public int CurrentValue { 
+            get 
+            { 
+                return _value; 
+            }
+            set 
+            {
+                _value = value;
+                ValueHasChanged?.Invoke(this, new ExampleEventArgs(value));
+            }
+        }
         public void Reset()
         {
-            _value = 0;
+            CurrentValue = 0;
         }
 
         public void Add(int value)
         {
-            _value += value;
+            CurrentValue += value;
+        }
+
+        public event ExampleEventHandler ValueHasChanged;
+    }
+
+
+    public delegate void ExampleEventHandler(object sender, ExampleEventArgs e);
+
+    public class ExampleEventArgs
+    {
+        public ExampleEventArgs(int value)
+        {
+            Value = value;
+        }
+
+        public int Value { get; set; }
+    }
+
+    class EvenSubscriber
+    {
+            
+        public void OnValueChanged(object sender, ExampleEventArgs e)
+        {          
+            Console.WriteLine(sender.ToString() + " value is now " + e.Value);
         }
     }
 }
